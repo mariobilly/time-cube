@@ -1,0 +1,10 @@
+# The cube and exports need only Python and ffmpeg. These are for AI depth, Track and What the AI sees.
+# Install PyTorch first (the CUDA build, for an NVIDIA GPU): https://pytorch.org/get-started/locally/
+torch
+numpy
+pillow
+opencv-python
+scipy
+transformers>=4.56,<5
+accelerate
+safetensors

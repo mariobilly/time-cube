@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Time Cube</title>
+  <link rel="icon" href="icon.png">
+  <link rel="stylesheet" href="app.css">
+  <script>
+    // the window's theme before the first paint (dark unless you switched to light)
+    try { document.documentElement.dataset.theme = localStorage.getItem("timecube.theme") || "dark"; }
+    catch { document.documentElement.dataset.theme = "dark"; }
+  </script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><img src="icon.png" alt="" class="logo">Time Cube</div>
+    <div class="group sources" role="group" aria-label="Source">
+      <button id="openVideo" title="Open a video (V)">Open video</button>
+      <button id="openCamera" title="Use the webcam (C)">Webcam</button>
+      <button id="openPhotos" title="Use a set of photos as stop-motion">Photos</button>
+      <button id="openDemo" title="The built-in demo">Demo</button>
+    </div>
+    <div class="source-name" id="sourceName"></div>
+    <div class="group actions">
+      <label class="pick" title="Preset">
+        <span>Preset</span>
+        <select id="preset"></select>
+      </label>
+      <label class="pick" title="Frame format of the preview and the export">
+        <span>Format</span>
+        <select id="format"></select>
+      </label>
+      <button id="snap" title="Save this frame as a PNG (P)">PNG</button>
+      <button id="record" title="Record what you see, live, including your mouse moves (R)"><span class="dot"></span>Record</button>
+      <button id="export" class="primary" title="Render a video frame by frame (E)">Export video</button>
+      <button id="theme" class="icon" title="Light / dark window (T)" aria-label="Light or dark window">☀</button>
+      <button id="help" class="icon" title="Shortcuts (?)">?</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="stage-col">
+      <div class="stage" id="stage">
+        <div class="frame" id="frame">
+          <canvas id="view"></canvas>
+          <div class="look-chip" id="lookChip"></div>
+          <div class="depth-chip" id="depthChip" hidden></div>
+        </div>
+        <div class="drop" id="drop"><div>Drop a video or photos</div></div>
+        <div class="picker" id="picker">
+          <canvas id="pickerCanvas"></canvas>
+          <div class="picker-bar"><span id="pickerHint"></span>
+            <button id="pickerClose">Close</button><button id="pickerGo" class="primary">Follow it</button></div>
+        </div>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </div>
+      <footer class="transport" id="transport">
+        <button id="restart" class="icon" title="Back to the start (Home)">⏮</button>
+        <button id="play" class="icon" title="Play / pause (Space)">❚❚</button>
+        <span class="time" id="time">0:00.0</span>
+        <div class="scrub-wrap">
+          <div class="range-mark" id="rangeMark"></div>
+          <input type="range" id="scrub" min="0" max="1" step="0.001" value="0" aria-label="Position">
+        </div>
+        <span class="time" id="dur">0:00.0</span>
+        <button id="setIn" title="Start the export here (I)">In</button>
+        <button id="setOut" title="End the export here (O)">Out</button>
+        <button id="clearRange" class="icon" title="Use the whole clip">↔</button>
+        <button id="mute" class="icon" title="Sound on / off (M)">🔊</button>
+      </footer>
+    </section>
+    <aside class="panel" id="panel">
+      <div class="looks" role="group" aria-label="Look">
+        <button data-look="0">Wire</button>
+        <button data-look="1">Slices</button>
+        <button data-look="2">Solid</button>
+        <button data-look="3">Points</button>
+      </div>
+      <div id="controls"></div>
+      <div class="panel-foot">
+        <button id="resetAll">Reset to preset</button>
+        <button id="resetView">Reset view</button>
+      </div>
+    </aside>
+  </main>
+
+  <dialog id="exportDlg">
+    <form method="dialog" id="exportForm">
+      <h2>Export video</h2>
+      <div class="row"><label for="exFormat">Format</label><select id="exFormat"></select></div>
+      <div class="row"><label>Background</label>
+        <div class="seg" id="exBg"><button type="button" data-v="colour">Colour (MP4)</button><button type="button" data-v="transparent">Transparent</button></div>
+      </div>
+      <div class="row" id="exAlphaRow"><label>Video type</label>
+        <div class="seg" id="exAlpha"><button type="button" data-v="prores">ProRes 4444 · .mov</button><button type="button" data-v="webm">VP9 alpha · .webm</button></div>
+      </div>
+      <p class="note sub" id="exAlphaNote"></p>
+      <div class="row"><label>Frame rate</label>
+        <div class="seg" id="exFps"><button type="button" data-v="30">30 fps</button><button type="button" data-v="60">60 fps</button></div>
+      </div>
+      <div class="row" id="exRangeRow"><label>Part</label><div id="exRange" class="note"></div></div>
+      <div class="row" id="exLenRow"><label for="exLen">Length</label><input type="number" id="exLen" min="1" max="600" step="0.5" value="30"> <span class="note">seconds</span></div>
+      <div class="row" id="exSoundRow"><label for="exSound">Sound</label><label class="check"><input type="checkbox" id="exSound" checked> Keep the video's sound</label></div>
+      <div class="row"><label for="exName">Name</label><input type="text" id="exName" spellcheck="false"></div>
+      <div class="row"><label>Quality</label>
+        <div class="seg" id="exQuality"><button type="button" data-v="18">High</button><button type="button" data-v="14">Best</button></div>
+      </div>
+      <p class="note" id="exWhere"></p>
+      <div class="progress" id="exProgress" hidden>
+        <div class="bar"><div id="exBar"></div></div>
+        <div class="note" id="exStatus"></div>
+      </div>
+      <div class="buttons">
+        <button type="button" id="exCancel">Close</button>
+        <button type="button" id="exGo" class="primary">Export</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="helpDlg">
+    <form method="dialog">
+      <h2>Time Cube</h2>
+      <p class="note">The last frames of your video are stacked front to back into a cube: the front face is now, the back face is a moment ago. Turn it and the sides show time as streaks. Give a video AI depth (Depth, in the panel) and every frame becomes a relief of the scene; with Layout: Camera path, each frame goes where the camera was. In Track, find something (type it, or click it) and follow it through the video. What the AI sees describes the video and answers questions about a moment.</p>
+      <table class="keys">
+        <tr><td>Space</td><td>Play / pause</td></tr>
+        <tr><td>Home</td><td>Back to the start</td></tr>
+        <tr><td>1 · 2 · 3 · 4</td><td>Wire · Slices · Solid · Points</td></tr>
+        <tr><td>Drag</td><td>Turn the cube (Shift-drag pans)</td></tr>
+        <tr><td>Wheel</td><td>Zoom</td></tr>
+        <tr><td>Double-click</td><td>Reset the view</td></tr>
+        <tr><td>V · C</td><td>Open a video · Webcam</td></tr>
+        <tr><td>I · O</td><td>Set In · Out for the export</td></tr>
+        <tr><td>M</td><td>Sound on / off</td></tr>
+        <tr><td>P · R · E</td><td>PNG · Record live · Export video</td></tr>
+        <tr><td>T</td><td>Light / dark window</td></tr>
+        <tr><td>Esc</td><td>Close the Track picker</td></tr>
+        <tr><td>Double-click a slider name</td><td>Back to its preset value</td></tr>
+      </table>
+      <div class="buttons"><button class="primary">OK</button></div>
+    </form>
+  </dialog>
+
+  <input type="file" id="fileVideo" accept="video/*,.mkv,.mov,.avi" hidden>
+  <input type="file" id="filePhotos" accept="image/*" multiple hidden>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
