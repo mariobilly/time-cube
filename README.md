@@ -12,6 +12,28 @@ free, the first time you use them (the caption model is a file you download your
 Inspired by a TouchDesigner piece in a reel by [nayana](https://www.instagram.com/reel/DeJe5aAh0fQ/). Time Cube is an
 independent project and shares no code with it.
 
+![Time Cube](docs/screenshot.jpg)
+
+<!-- videos:start -->
+## See it in action
+
+<p align="center"><a href="docs/videos/tutorial.mp4"><img src="docs/videos/tutorial.jpg" alt="How it works" width="640"></a><br><b>▶ <a href="docs/videos/tutorial.mp4">How it works</a></b> (0:58, with captions)</p>
+
+**Made with Time Cube, from a free Pexels clip and public-domain portraits (The Met)**
+
+<table><tr>
+<td width="33%" align="center"><a href="docs/videos/examples/dancer-classic.mp4"><img src="docs/videos/examples/dancer-classic.gif" alt="Classic, Vertical 9:16"></a><br><a href="docs/videos/examples/dancer-classic.mp4">Classic, Vertical 9:16</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/dancer-night-lines-square.mp4"><img src="docs/videos/examples/dancer-night-lines-square.gif" alt="Night lines, Square 1:1"></a><br><a href="docs/videos/examples/dancer-night-lines-square.mp4">Night lines, Square 1:1</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/dancer-blueprint-wide.mp4"><img src="docs/videos/examples/dancer-blueprint-wide.gif" alt="Blueprint, Wide 16:9"></a><br><a href="docs/videos/examples/dancer-blueprint-wide.mp4">Blueprint, Wide 16:9</a></td>
+</tr><tr>
+<td width="33%" align="center"><a href="docs/videos/examples/portraits-glass-stack.mp4"><img src="docs/videos/examples/portraits-glass-stack.gif" alt="Glass stack, photos, 4:5"></a><br><a href="docs/videos/examples/portraits-glass-stack.mp4">Glass stack, photos, 4:5</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/dancer-depth-points.mp4"><img src="docs/videos/examples/dancer-depth-points.gif" alt="Depth points (AI depth)"></a><br><a href="docs/videos/examples/dancer-depth-points.mp4">Depth points (AI depth)</a></td>
+<td width="33%" align="center"><a href="docs/videos/examples/dancer-follow-one.mp4"><img src="docs/videos/examples/dancer-follow-one.gif" alt="Follow one (Track)"></a><br><a href="docs/videos/examples/dancer-follow-one.mp4">Follow one (Track)</a></td>
+</tr></table>
+
+Click any picture to play the video. Example sources: "A Woman Dancing Gracefully" by [Pavel Danilyuk](https://www.pexels.com/video/a-woman-dancing-gracefully-6939968/) (Pexels licence); portraits by [Biagio d'Antonio](https://www.metmuseum.org/art/collection/search/435664), [Cosmè Tura](https://www.metmuseum.org/art/collection/search/437851), [Jacometto](https://www.metmuseum.org/art/collection/search/436769), [Adriaen Hanneman](https://www.metmuseum.org/art/collection/search/436630), [Velázquez](https://www.metmuseum.org/art/collection/search/437874) and [Giovanni di Francesco](https://www.metmuseum.org/art/collection/search/437859), The Met (CC0).
+<!-- videos:end -->
+
 ## Install
 
 You need:
@@ -321,6 +343,9 @@ another folder): every check, screenshots of every look, preset and source, the 
 - Sample clip: "A Woman Dancing Gracefully" by
   [Pavel Danilyuk](https://www.pexels.com/video/a-woman-dancing-gracefully-6939968/)
   ([Pexels licence](https://www.pexels.com/license/)).
+- Examples and tutorial video in `docs/`: made with Time Cube from the sample clip above (with a generated
+  tone as its sound) and, for the stop-motion example, six public-domain portraits from The Met (CC0) by
+  [Biagio d'Antonio](https://www.metmuseum.org/art/collection/search/435664), [Cosmè Tura](https://www.metmuseum.org/art/collection/search/437851), [Jacometto](https://www.metmuseum.org/art/collection/search/436769), [Adriaen Hanneman](https://www.metmuseum.org/art/collection/search/436630), [Velázquez](https://www.metmuseum.org/art/collection/search/437874) and [Giovanni di Francesco](https://www.metmuseum.org/art/collection/search/437859).
 - [transformers](https://github.com/huggingface/transformers), [PyTorch](https://pytorch.org/),
   [OpenCV](https://opencv.org/) and [ffmpeg](https://ffmpeg.org/).
 
