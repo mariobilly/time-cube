@@ -313,6 +313,7 @@ dialog {
 dialog::backdrop { background: var(--backdrop); }
 dialog h2 { margin: 0 0 12px; font-size: 16px; }
 dialog .row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+dialog .row[hidden] { display: none; }
 dialog .row > label:first-child { width: 86px; color: var(--muted); flex: none; }
 dialog .row .seg { flex: 1; }
 dialog input[type="text"], dialog input[type="number"] {
